@@ -35,6 +35,8 @@ public class QuickfixCrossrefTestLanguageValidator extends AbstractQuickfixCross
 	public static final String BAD_NAME_IN_SUBELEMENTS = "badNameInSubelements";
 	public static final String FIXABLE = "fixable";
 	public static final String LOWERCASE = "lowercase";
+	public static final String NEED_DOCUMENTATION = "needDocumentation";
+	public static final String NEED_SIBLING = "needSibling";
 		
 	public static final String ISSUE_DATA_0 = "data0";
 	public static final String ISSUE_DATA_1 = "data1";
@@ -97,6 +99,22 @@ public class QuickfixCrossrefTestLanguageValidator extends AbstractQuickfixCross
 	public void checkNameUppercase(Element ele) {
 		if (ele.getName().startsWith("lowercase")) {
 			warning(LOWERCASE, ele, QuickfixCrossrefPackage.Literals.ELEMENT__NAME, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, LOWERCASE);
+		}
+	}
+
+	@Check(CheckType.FAST)
+	public void checkNeedDocumentation(Element ele) {
+		if (ele.getName().equals(NEED_DOCUMENTATION) && ele.getDoc() == null) {
+			warning(NEED_DOCUMENTATION, ele, QuickfixCrossrefPackage.Literals.ELEMENT__NAME, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
+					NEED_DOCUMENTATION);
+		}
+	}
+
+	@Check(CheckType.FAST)
+	public void checkNeedSibling(Element ele) {
+		if (ele.getName().equals(NEED_SIBLING)) {
+			warning(NEED_SIBLING, ele, QuickfixCrossrefPackage.Literals.ELEMENT__NAME, ValidationMessageAcceptor.INSIGNIFICANT_INDEX,
+					NEED_SIBLING);
 		}
 	}
 }

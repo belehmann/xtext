@@ -21,6 +21,7 @@ import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider;
 import org.eclipse.xtext.ui.editor.quickfix.Fix;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor;
 import org.eclipse.xtext.ui.tests.quickfix.quickfixCrossref.Element;
+import org.eclipse.xtext.ui.tests.quickfix.quickfixCrossref.Main;
 import org.eclipse.xtext.ui.tests.quickfix.quickfixCrossref.QuickfixCrossrefFactory;
 import org.eclipse.xtext.ui.tests.quickfix.validation.QuickfixCrossrefTestLanguageValidator;
 import org.eclipse.xtext.validation.Issue;
@@ -100,6 +101,36 @@ public class QuickfixCrossrefTestLanguageQuickfixProvider extends DefaultQuickfi
 					String upperCase = document.get(theIssue.getOffset(), theIssue.getLength()).toUpperCase();
 					// uppercase + duplicate => allows offset change tests
 					document.replace(theIssue.getOffset(), theIssue.getLength(), upperCase + "_" +upperCase);
+				}
+			}
+		});
+	}
+
+	@Fix(QuickfixCrossrefTestLanguageValidator.NEED_DOCUMENTATION)
+	public void fixNeedDocumentation(final Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, "add documentation", "add documentation", null, new ISemanticModification() {
+			@Override
+			public void apply(EObject obj, IModificationContext context) {
+				((Element) obj).setDoc("doc");
+			}
+		});
+	}
+
+	@Fix(QuickfixCrossrefTestLanguageValidator.NEED_SIBLING)
+	public void fixNeedSibling(final Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, "add sibling", "add sibling", null, new ISemanticModification() {
+			@Override
+			public void apply(EObject obj, IModificationContext context) {
+				Element element = (Element) obj;
+				Element sibling = QuickfixCrossrefFactory.eINSTANCE.createElement();
+				sibling.setName("sibling");
+				EObject container = element.eContainer();
+				if (container instanceof Element) {
+					Element parent = (Element) container;
+					parent.getContained().add(parent.getContained().indexOf(element) + 1, sibling);
+				} else if (container instanceof Main) {
+					Main parent = (Main) container;
+					parent.getElements().add(parent.getElements().indexOf(element) + 1, sibling);
 				}
 			}
 		});

@@ -131,9 +131,9 @@ public class CompositeQuickfixTest extends AbstractMultiQuickfixTest {
 		assertContentsAndMarkers(resource, markers, contentAndMarkersBefore);
 		applyQuickfixOnMultipleMarkers(markers);
 		String contentAndMarkersAfter =
-				"newElement { } c {	goodname { foo {} } }\n" +
-				"newElement { } a {	goodname { bar {} } }\n" +
-				"newElement { } b {	goodname { baz {} } }\n" +
+				"newElement {\n}\nc {	goodname { foo {} } }\n" +
+				"newElement {\n}\na {	goodname { bar {} } }\n" +
+				"newElement {\n}\nb {	goodname { baz {} } }\n" +
 				"-----\n" +
 				"(no markers found)\n";
 		assertContentsAndMarkers(resource, contentAndMarkersAfter);
@@ -156,7 +156,7 @@ public class CompositeQuickfixTest extends AbstractMultiQuickfixTest {
 		IMarker firstMarker = getFirstMarker(markers);
 		applyQuickfixOnSingleMarkers(firstMarker);
 		String contentAndMarkersAfter =
-				"newElement { } c {	goodname { foo {} } }\n" +
+				"newElement {\n}\nc {	goodname { foo {} } }\n" +
 				"<0<a>0> {	badname { bar {} } }\n" +
 				"-----\n" +
 				"0: message=badNameInSubelements\n";
@@ -175,7 +175,7 @@ public class CompositeQuickfixTest extends AbstractMultiQuickfixTest {
 				Joiner.on("\n").join(Lists.transform(Arrays.asList(proposals), ICompletionProposal::getDisplayString)));
 		proposals[0].apply(editor.getDocument());
 		String expectation =
-				"newElement { } c {	goodname { foo {} } }\n" +
+				"newElement {\n}\nc {	goodname { foo {} } }\n" +
 				"a {	badname { bar {} } }\n";
 		assertEquals(expectation.toString(), editor.getDocument().get());
 	}
