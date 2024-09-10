@@ -14,6 +14,9 @@ import com.google.inject.name.Names;
 import java.util.Properties;
 import org.eclipse.xtext.Constants;
 import org.eclipse.xtext.IGrammarAccess;
+import org.eclipse.xtext.formatting2.FormatterPreferenceValuesProvider;
+import org.eclipse.xtext.formatting2.FormatterPreferences;
+import org.eclipse.xtext.formatting2.IFormatter2;
 import org.eclipse.xtext.parser.IParser;
 import org.eclipse.xtext.parser.ITokenToStringConverter;
 import org.eclipse.xtext.parser.antlr.AntlrTokenDefProvider;
@@ -23,12 +26,14 @@ import org.eclipse.xtext.parser.antlr.ITokenDefProvider;
 import org.eclipse.xtext.parser.antlr.Lexer;
 import org.eclipse.xtext.parser.antlr.LexerBindings;
 import org.eclipse.xtext.parser.antlr.LexerProvider;
+import org.eclipse.xtext.preferences.IPreferenceValuesProvider;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.serializer.impl.Serializer;
 import org.eclipse.xtext.serializer.sequencer.ISemanticSequencer;
 import org.eclipse.xtext.serializer.sequencer.ISyntacticSequencer;
 import org.eclipse.xtext.service.DefaultRuntimeModule;
 import org.eclipse.xtext.service.SingletonBinding;
+import org.eclipse.xtext.ui.tests.quickfix.formatting2.QuickfixCrossrefTestLanguageFormatter;
 import org.eclipse.xtext.ui.tests.quickfix.parser.antlr.QuickfixCrossrefTestLanguageAntlrTokenFileProvider;
 import org.eclipse.xtext.ui.tests.quickfix.parser.antlr.QuickfixCrossrefTestLanguageParser;
 import org.eclipse.xtext.ui.tests.quickfix.parser.antlr.internal.InternalQuickfixCrossrefTestLanguageLexer;
@@ -126,6 +131,16 @@ public abstract class AbstractQuickfixCrossrefTestLanguageRuntimeModule extends 
 	@SingletonBinding(eager=true)
 	public Class<? extends QuickfixCrossrefTestLanguageValidator> bindQuickfixCrossrefTestLanguageValidator() {
 		return QuickfixCrossrefTestLanguageValidator.class;
+	}
+	
+	// contributed by org.eclipse.xtext.xtext.generator.formatting.Formatter2Fragment2
+	public Class<? extends IFormatter2> bindIFormatter2() {
+		return QuickfixCrossrefTestLanguageFormatter.class;
+	}
+	
+	// contributed by org.eclipse.xtext.xtext.generator.formatting.Formatter2Fragment2
+	public void configureFormatterPreferences(Binder binder) {
+		binder.bind(IPreferenceValuesProvider.class).annotatedWith(FormatterPreferences.class).to(FormatterPreferenceValuesProvider.class);
 	}
 	
 }

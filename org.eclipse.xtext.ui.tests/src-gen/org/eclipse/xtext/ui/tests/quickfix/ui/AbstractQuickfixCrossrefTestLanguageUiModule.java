@@ -25,6 +25,8 @@ import org.eclipse.xtext.ui.editor.contentassist.IContentProposalProvider;
 import org.eclipse.xtext.ui.editor.contentassist.IProposalConflictHelper;
 import org.eclipse.xtext.ui.editor.contentassist.antlr.AntlrProposalConflictHelper;
 import org.eclipse.xtext.ui.editor.contentassist.antlr.DelegatingContentAssistContextFactory;
+import org.eclipse.xtext.ui.editor.formatting.IContentFormatterFactory;
+import org.eclipse.xtext.ui.editor.formatting2.ContentFormatterFactory;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionProvider;
 import org.eclipse.xtext.ui.shared.Access;
 import org.eclipse.xtext.ui.tests.quickfix.ide.contentassist.antlr.QuickfixCrossrefTestLanguageParser;
@@ -96,6 +98,11 @@ public abstract class AbstractQuickfixCrossrefTestLanguageUiModule extends Defau
 	// contributed by org.eclipse.xtext.xtext.generator.ui.quickfix.QuickfixProviderFragment2
 	public Class<? extends IssueResolutionProvider> bindIssueResolutionProvider() {
 		return QuickfixCrossrefTestLanguageQuickfixProvider.class;
+	}
+	
+	// contributed by org.eclipse.xtext.xtext.generator.formatting.Formatter2Fragment2
+	public Class<? extends IContentFormatterFactory> bindIContentFormatterFactory() {
+		return ContentFormatterFactory.class;
 	}
 	
 }

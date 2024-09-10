@@ -265,6 +265,7 @@ Workflow {
 				fragment = @org.eclipse.xtext.ui.tests.TestLanguagesFragments {}
 				fragment = validation.ValidatorFragment2 {}
 				fragment = quickfix.QuickfixProviderFragment2 {}
+				fragment = formatting.Formatter2Fragment2 {}
 			}
 		}
 		language = {
