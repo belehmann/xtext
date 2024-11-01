@@ -20,6 +20,7 @@ import org.eclipse.xtext.testlanguages.fileAware.fileAware.PackageDeclaration;
 import org.eclipse.xtext.testlanguages.fileAware.services.FileAwareTestLanguageGrammarAccess;
 import org.eclipse.xtext.testlanguages.fileAware.services.FileAwareTestLanguageGrammarAccess.ElementElements;
 import org.eclipse.xtext.testlanguages.fileAware.services.FileAwareTestLanguageGrammarAccess.ImportElements;
+import org.eclipse.xtext.testlanguages.fileAware.services.FileAwareTestLanguageGrammarAccess.PackageDeclarationElements;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
@@ -31,8 +32,12 @@ public class FileAwareTestLanguageFormatter extends AbstractJavaFormatter {
 
 	protected void format(PackageDeclaration pkg, IFormattableDocument doc) {
 		ImportElements importAccess = grammarAccess.getImportAccess();
+		PackageDeclarationElements packageDeclarationAccess = grammarAccess.getPackageDeclarationAccess();
 		
-		doc.append(regionFor(pkg).feature(FileAwarePackage.Literals.PACKAGE_DECLARATION__NAME), it -> it.setNewLines(2));
+		doc.prepend(regionFor(pkg).keyword(packageDeclarationAccess.getPackageKeyword_0()), this::noSpace);
+		doc.append(regionFor(pkg).keyword(packageDeclarationAccess.getPackageKeyword_0()), this::oneSpace);
+		doc.append(regionFor(pkg).feature(FileAwarePackage.Literals.PACKAGE_DECLARATION__NAME), this::newLine);
+
 		Import last = Iterables.getLast(pkg.getImports(), null);
 		for (Import imp : pkg.getImports()) {
 			doc.append(regionFor(imp).keyword(importAccess.getImportKeyword_0()), this::oneSpace);
