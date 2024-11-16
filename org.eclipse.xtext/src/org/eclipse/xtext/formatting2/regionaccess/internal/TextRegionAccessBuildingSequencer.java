@@ -17,6 +17,8 @@ import org.eclipse.xtext.AbstractRule;
 import org.eclipse.xtext.Action;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.RuleCall;
+import org.eclipse.xtext.formatting2.regionaccess.IEObjectRegion;
+import org.eclipse.xtext.formatting2.regionaccess.IHiddenRegion;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.ILeafNode;
 import org.eclipse.xtext.resource.XtextResource;
@@ -200,6 +202,14 @@ public class TextRegionAccessBuildingSequencer implements ISequenceAcceptor {
 	}
 
 	public StringBasedRegionAccess getRegionAccess() {
+		IEObjectRegion root = regionAccess.regionForRootEObject();
+		if (root instanceof StringEObjectRegion) {
+			StringEObjectRegion strRoot = (StringEObjectRegion) root;
+			IHiddenRegion hidden = strRoot.getTrailingHiddenRegion();
+			if (hidden instanceof StringHiddenRegion) {
+				((StringHiddenRegion) hidden).setUndefined(false);
+			}
+		}
 		return regionAccess;
 	}
 

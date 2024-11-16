@@ -24,7 +24,6 @@ import org.junit.runner.RunWith;
 @InjectWith(QuickfixCrossrefTestLanguageUiInjectorProvider.class)
 public class QuickfixFormatterTest extends AbstractQuickfixTest {
 
-	@Ignore("until formatting issues are solved")
 	@Test
 	public void testAddDocumentation() {
 		// @formatter:off

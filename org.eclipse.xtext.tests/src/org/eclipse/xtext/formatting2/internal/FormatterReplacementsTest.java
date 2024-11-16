@@ -109,8 +109,7 @@ public class FormatterReplacementsTest {
 				Lists.transform(replacements, it -> ("'" + it.getText() + "' -> '" + it.getReplacementText() + "'\n")));
 		String expected = 
 				"'' -> ''\n" +
-				"'' -> ''\n" +
-				"'' -> ''\n";
+				"'' -> ''\n"; 
 		Assert.assertEquals(expected, actual);
 	}
 }

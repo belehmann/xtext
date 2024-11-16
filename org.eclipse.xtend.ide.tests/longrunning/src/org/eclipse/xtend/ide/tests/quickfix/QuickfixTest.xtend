@@ -122,7 +122,6 @@ class QuickfixTest extends AbstractXtendUITestCase {
 					override synchronized int doSth() {
 						0
 					}
-				
 				}
 			''')
 	}

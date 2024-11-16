@@ -198,7 +198,6 @@ public class QuickfixTest extends AbstractXtendUITestCase {
     _builder_1.append("\t");
     _builder_1.append("}");
     _builder_1.newLine();
-    _builder_1.newLine();
     _builder_1.append("}");
     _builder_1.newLine();
     _assertResolutionLabels.assertModelAfterQuickfix(_builder_1);
