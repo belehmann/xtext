@@ -15,7 +15,6 @@ import org.eclipse.xtext.testing.formatter.FormatterTestHelper;
 import org.eclipse.xtext.testlanguages.fileAware.tests.FileAwareTestLanguageInjectorProvider;
 import org.eclipse.xtext.util.ITextRegion;
 import org.eclipse.xtext.util.TextRegion;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -38,7 +37,6 @@ public class RegionFormattingTest {
 	 * the selected line (ref A) is formatted to level 2 which is also the same
 	 * as it would be after formatting without selection.
 	 */
-	@Ignore("until formatting issues are solved")
 	@Test
 	public void singleSelectedLineIsFormattedToIndentationLevel2_withParentOnLevel1() {
 		// @formatter:off
@@ -78,7 +76,6 @@ public class RegionFormattingTest {
 	 * selected line (ref A) is formatted <b>relative</b> to the current parent
 	 * indentation level (level 0) and is indented to level 1.
 	 */
-	@Ignore("until formatting issues are solved")
 	@Test
 	public void singleSelectedLineIsFormattedToIndentationLevel1_withParentOnLevel0() {
 		// @formatter:off
