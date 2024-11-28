@@ -25,8 +25,10 @@ import org.eclipse.xtext.formatting2.debug.HiddenRegionFormattingToString;
 import org.eclipse.xtext.formatting2.regionaccess.IAstRegion;
 import org.eclipse.xtext.formatting2.regionaccess.IEObjectRegion;
 import org.eclipse.xtext.formatting2.regionaccess.IHiddenRegion;
+import org.eclipse.xtext.formatting2.regionaccess.IHiddenRegionPart;
 import org.eclipse.xtext.formatting2.regionaccess.ITextReplacement;
 import org.eclipse.xtext.formatting2.regionaccess.ITextSegment;
+import org.eclipse.xtext.formatting2.regionaccess.internal.StringHiddenRegion;
 import org.eclipse.xtext.formatting2.regionaccess.internal.TextReplacement;
 import org.eclipse.xtext.util.ITextRegion;
 import org.eclipse.xtext.util.TextRegion;
@@ -99,15 +101,36 @@ public class WhitespaceReplacer implements ITextReplacer {
 		}
 		int indentationCount = computeNewIndentation(context);
 
+		boolean formatUndefinedHiddenRegionsOnly = formatting.getRequest().isFormatUndefinedHiddenRegionsOnly();
+
+		IHiddenRegion hidden = getHiddenRegion(region);
+		IHiddenRegion previousHidden = null, nextHidden = null, nextNextHidden = null;
+		if (hidden != null) {
+			previousHidden = hidden.getPreviousHiddenRegion();
+			nextHidden = hidden.getNextHiddenRegion();
+		}
+		if (nextHidden != null) {
+			nextNextHidden = nextHidden.getNextHiddenRegion(); // last undefined hidden must not trigger a transition.
+		}
+		if (previousHidden != null && nextHidden != null && nextHidden.isUndefined() && nextNextHidden != null
+				&& hidden != null && !hidden.isUndefined()) {
+			formatting.getRequest().setFormatUndefinedHiddenRegionsOnly(false);
+		} else if (hidden != null && hidden.isUndefined() && nextHidden == null) {
+			// Another option: Add region to formatter request which does not contain the hidden region.
+			// This lets the text replacer context filter out the replacement
+			return context.withIndentation(indentationCount);
+		}
+
 		List<IEObjectRegion> eObjRegions = getAllEObjectRegions(region.getTextRegionAccess().regionForRootEObject());
 		Map<Integer, IEObjectRegion> offsetToEObjectRegion = getOffsetToEObjectRegion(eObjRegions);
-		
-		// IF (the end-offset of this region is the offset of any EObjectRegion) AND
-		// (the EObjectRegion is NOT contained in any of the requested ranges) THEN
-		// set the indentation level to the indentation level of the EObjectRegion.
+		// If the end of this region touches the begin of an EObjectRegion...
 		if (offsetToEObjectRegion.containsKey(region.getEndOffset())) {
 			IEObjectRegion eObjRegion = offsetToEObjectRegion.get(region.getEndOffset());
-			if (!isInRequestedRange(eObjRegion, context)) {
+			// ...and the EObjectRegion is outside of the requested range OR
+			// we are in "quickfix mode" (formatUndefinedHiddenRegionsOnly) AND this region is defined,
+			// then set the indentation level to the indentation level of the EObjectRegion. 
+			if (!isInRequestedRange(eObjRegion, context)
+					|| (formatting.getRequest().isFormatUndefinedHiddenRegionsOnly() && !isInUndefinedRegion(region))) {
 				String indentationString = eObjRegion.getLineRegions().get(0).getIndentation().getText();
 				indentationCount = getIndentationLevel(indentationString, context);
 			}
@@ -131,9 +154,29 @@ public class WhitespaceReplacer implements ITextReplacer {
 				context.addReplacement(replacement);
 			}
 		}
+		formatting.getRequest().setFormatUndefinedHiddenRegionsOnly(formatUndefinedHiddenRegionsOnly);
+		
 		return context.withIndentation(indentationCount);
 	}
 	
+	private static IHiddenRegion getHiddenRegion(ITextSegment region) {
+		IHiddenRegion hidden = null;
+		if (region instanceof IHiddenRegionPart) {
+			hidden = ((IHiddenRegionPart) region).getHiddenRegion();
+		} else if (region instanceof IHiddenRegion) {
+			hidden = (IHiddenRegion) region;
+		}
+		return hidden;
+	}
+	
+	private static boolean isInUndefinedRegion(ITextSegment region) {
+		IHiddenRegion hidden = getHiddenRegion(region);
+		if (hidden == null) {
+			return true;
+		}
+		return hidden.isUndefined();
+	}
+
 	private static Map<Integer, IEObjectRegion> getOffsetToEObjectRegion(Iterable<IEObjectRegion> eObjRegions) {
 		Map<Integer, IEObjectRegion> offsetToEObjectRegion = new HashMap<>();
 		for (IEObjectRegion eObjRegion : eObjRegions) {

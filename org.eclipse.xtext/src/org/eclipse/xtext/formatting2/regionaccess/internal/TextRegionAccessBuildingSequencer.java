@@ -202,14 +202,6 @@ public class TextRegionAccessBuildingSequencer implements ISequenceAcceptor {
 	}
 
 	public StringBasedRegionAccess getRegionAccess() {
-		IEObjectRegion root = regionAccess.regionForRootEObject();
-		if (root instanceof StringEObjectRegion) {
-			StringEObjectRegion strRoot = (StringEObjectRegion) root;
-			IHiddenRegion hidden = strRoot.getTrailingHiddenRegion();
-			if (hidden instanceof StringHiddenRegion) {
-				((StringHiddenRegion) hidden).setUndefined(false);
-			}
-		}
 		return regionAccess;
 	}
 

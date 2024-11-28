@@ -13,7 +13,6 @@ import org.eclipse.xtext.testing.XtextRunner;
 import org.eclipse.xtext.ui.testing.AbstractQuickfixTest;
 import org.eclipse.xtext.ui.tests.quickfix.ui.tests.QuickfixCrossrefTestLanguageUiInjectorProvider;
 import org.eclipse.xtext.ui.tests.quickfix.validation.QuickfixCrossrefTestLanguageValidator;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -46,7 +45,6 @@ public class QuickfixFormatterTest extends AbstractQuickfixTest {
 				new Quickfix("add documentation", "add documentation", expected));
 	}
 
-	@Ignore("until formatting issues are solved")
 	@Test
 	public void testAddSibling() {
 		// @formatter:off
