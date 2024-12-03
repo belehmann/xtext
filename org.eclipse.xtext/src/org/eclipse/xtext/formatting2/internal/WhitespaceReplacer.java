@@ -28,8 +28,6 @@ import org.eclipse.xtext.formatting2.regionaccess.IHiddenRegion;
 import org.eclipse.xtext.formatting2.regionaccess.IHiddenRegionPart;
 import org.eclipse.xtext.formatting2.regionaccess.ITextReplacement;
 import org.eclipse.xtext.formatting2.regionaccess.ITextSegment;
-import org.eclipse.xtext.formatting2.regionaccess.internal.StringHiddenRegion;
-import org.eclipse.xtext.formatting2.regionaccess.internal.TextReplacement;
 import org.eclipse.xtext.util.ITextRegion;
 import org.eclipse.xtext.util.TextRegion;
 
@@ -270,9 +268,8 @@ public class WhitespaceReplacer implements ITextReplacer {
 			int stripTrailing = min(replacementEnd - overlapEnd, replacementText.length());
 			replacementText = replacementText.substring(0, replacementText.length() - stripTrailing);
 		}
-		replacement = new TextReplacement(replacement.getTextRegionAccess(), overlapRegion.getOffset(),
+		return replacement.getTextRegionAccess().getRewriter().createReplacement(overlapRegion.getOffset(),
 				overlapRegion.getLength(), replacementText);
-		return replacement;
 	}
 
 	private static ITextRegion overlapRegion(ITextRegion region1, ITextRegion region2) {
